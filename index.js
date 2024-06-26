@@ -7,9 +7,16 @@ app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
-cron.schedule('*/10 * * * * *', () => {
-    console.log('Hello World!');
-  });
+const apiFunc = async () => {
+  const response = await fetch(
+    'https://api.coindesk.com/v1/bpi/currentprice.json'
+  );
+  return await response.json();
+};
+cron.schedule('0 */1 * * * *', async () => {
+  const result = await apiFunc();
+  console.log(result);
+});
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
+  console.log(`Cron job started`);
 });
